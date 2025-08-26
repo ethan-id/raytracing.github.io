@@ -2,3 +2,7 @@
 
 build/
 /*.ppm
+.cache/
+.clangd
+.DS_Store
+compile_commands.json
