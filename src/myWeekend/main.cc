@@ -4,14 +4,16 @@
 
 #include <iostream>
 
-// temp stub
 color ray_color(const ray& r) {
-    return color(0,0,0);
+    vec3 unit_dir = unit_vector(r.direction());
+    auto a = 0.5*(unit_dir.y() + 1.0);
+    return (1.0-a)*color(1.0, 1.0, 1.0) + a*color(0.5, 0.7, 1.0);
 }
 
 int main() {
     auto aspect_ratio = 16.0 / 9.0;
     int image_w = 400;
+
     int image_h = int(image_w / aspect_ratio);
     image_h = (image_h < 1) ? 1 : image_h; // ensure image height is at least 1
 
@@ -38,11 +40,11 @@ int main() {
 
     for (int j = 0; j < image_h; j++) {
         std::clog << "\rScanlines remaining: " << (image_h - j) << ' ' << std::flush;
-        for (int i = 0; i < image_h; i++) {
+        for (int i = 0; i < image_w; i++) {
             auto pixel_center = pixel00_loc + (i * pixel_delta_u) + (j * pixel_delta_v);
             auto ray_direction = pixel_center - camera_center;
-
             ray r(camera_center, ray_direction);
+
             color pixel_color = ray_color(r);
 
             write_color(std::cout, pixel_color);
