@@ -19,6 +19,10 @@ set ( EXTERNAL
   src/external/stb_image.h
 )
 
+set ( SOURCE_MY_WEEKEND
+  src/myWeekend/main.cc
+)
+
 set ( SOURCE_ONE_WEEKEND
   src/InOneWeekend/main.cc
   src/InOneWeekend/camera.h
@@ -106,6 +110,7 @@ elseif (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 endif()
 
 # Executables
+add_executable(myWeekend         ${EXTERNAL} ${SOURCE_MY_WEEKEND})
 add_executable(inOneWeekend      ${EXTERNAL} ${SOURCE_ONE_WEEKEND})
 add_executable(theNextWeek       ${EXTERNAL} ${SOURCE_NEXT_WEEK})
 add_executable(theRestOfYourLife ${EXTERNAL} ${SOURCE_REST_OF_YOUR_LIFE})
