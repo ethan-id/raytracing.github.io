@@ -22,6 +22,7 @@ set ( EXTERNAL
 set ( SOURCE_MY_WEEKEND
   src/myWeekend/main.cc
   src/myWeekend/vec3.h
+  src/myWeekend/color.h
 )
 
 set ( SOURCE_ONE_WEEKEND
