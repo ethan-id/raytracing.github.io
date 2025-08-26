@@ -4,9 +4,15 @@
 #include <iostream>
 
 int main() {
-    // Img
-    int image_w = 256;
-    int image_h = 256;
+    auto aspect_ratio = 16.0 / 9.0;
+    int image_w = 400;
+    int image_h = int(image_w / aspect_ratio);
+
+    image_h = (image_h < 1) ? 1 : image_h; // ensure image height is at least 1
+
+    // Viewport widths less than one are fine since they're "real valued". (Idk what that really means)
+    auto viewport_h = 2.0; // arbitrary num
+    auto viewport_w = viewport_h * (double(image_w)/image_h);
 
     // Render
     std::cout << "P3\n" << image_w << ' ' << image_h << "\n255\n";
