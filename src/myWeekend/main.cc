@@ -9,6 +9,7 @@ int main() {
     std::cout << "P3\n" << image_w << ' ' << image_h << "\n255\n";
 
     for (int j = 0; j < image_h; j++) {
+        std::clog << "\rScanlines remaining: " << (image_h - j) << ' ' << std::flush;
         for (int i = 0; i < image_h; i++) {
             auto r = double(i) / (image_w-1);
             auto g = double(j) / (image_h-1);
@@ -21,4 +22,6 @@ int main() {
             std::cout << ir << ' ' << ig << ' ' << ib << '\n';
         }
     }
+    
+    std::clog << "\rDone.                           \n";
 }
