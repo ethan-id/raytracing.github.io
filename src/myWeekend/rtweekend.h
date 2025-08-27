@@ -33,8 +33,8 @@ inline double ranom_double(double min, double max) {
 }
 
 // Common Headers
-#include "color.h"
 #include "interval.h"
+#include "color.h"
 #include "ray.h"
 #include "vec3.h"
 
