@@ -63,3 +63,6 @@ endif()
 
 # Executables
 add_executable(myWeekend         ${EXTERNAL} ${SOURCE_MY_WEEKEND})
+if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  target_compile_options(myWeekend PRIVATE -include ${CMAKE_SOURCE_DIR}/src/myWeekend/rtweekend.h)
+endif()
