@@ -92,7 +92,7 @@ class camera {
 
             if (world.hit(r, interval(0.001, infinity), rec)) {
                 vec3 dir = rec.normal + random_unit_vector();
-                return 0.5 * ray_color(ray(rec.p, dir), depth-1, world);
+                return 0.5 * ray_color(ray(rec.p, dir), depth-1, world); // 0.1 = reflectance
             }
 
             vec3 unit_dir = unit_vector(r.direction());
