@@ -1,7 +1,6 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
-#include "TheNextWeek/vec3.h"
 #include "hittable.h"
 #include "material.h"
 
