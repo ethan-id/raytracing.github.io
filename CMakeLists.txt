@@ -20,10 +20,16 @@ set ( EXTERNAL
 )
 
 set ( SOURCE_MY_WEEKEND
-  src/myWeekend/main.cc
-  src/myWeekend/vec3.h
+  src/myWeekend/camera.h
   src/myWeekend/color.h
+  src/myWeekend/hittable.h
+  src/myWeekend/hittable_list.h
+  src/myWeekend/interval.h
+  src/myWeekend/main.cc
   src/myWeekend/ray.h
+  src/myWeekend/rtweekend.h
+  src/myWeekend/sphere.h
+  src/myWeekend/vec3.h
 )
 
 set ( SOURCE_ONE_WEEKEND

@@ -71,7 +71,7 @@ void bouncing_spheres() {
     camera cam;
 
     cam.aspect_ratio      = 16.0 / 9.0;
-    cam.image_width       = 400;
+    cam.image_w       = 400;
     cam.samples_per_pixel = 100;
     cam.max_depth         = 50;
     cam.background        = color(0.70, 0.80, 1.00);
@@ -99,7 +99,7 @@ void checkered_spheres() {
     camera cam;
 
     cam.aspect_ratio      = 16.0 / 9.0;
-    cam.image_width       = 400;
+    cam.image_w       = 400;
     cam.samples_per_pixel = 100;
     cam.max_depth         = 50;
     cam.background        = color(0.70, 0.80, 1.00);
@@ -123,7 +123,7 @@ void earth() {
     camera cam;
 
     cam.aspect_ratio      = 16.0 / 9.0;
-    cam.image_width       = 400;
+    cam.image_w       = 400;
     cam.samples_per_pixel = 100;
     cam.max_depth         = 50;
     cam.background        = color(0.70, 0.80, 1.00);
@@ -149,7 +149,7 @@ void perlin_spheres() {
     camera cam;
 
     cam.aspect_ratio      = 16.0 / 9.0;
-    cam.image_width       = 400;
+    cam.image_w       = 400;
     cam.samples_per_pixel = 100;
     cam.max_depth         = 50;
     cam.background        = color(0.70, 0.80, 1.00);
@@ -185,7 +185,7 @@ void quads() {
     camera cam;
 
     cam.aspect_ratio      = 1.0;
-    cam.image_width       = 400;
+    cam.image_w       = 400;
     cam.samples_per_pixel = 100;
     cam.max_depth         = 50;
     cam.background        = color(0.70, 0.80, 1.00);
@@ -215,7 +215,7 @@ void simple_light() {
     camera cam;
 
     cam.aspect_ratio      = 16.0 / 9.0;
-    cam.image_width       = 400;
+    cam.image_w       = 400;
     cam.samples_per_pixel = 100;
     cam.max_depth         = 50;
     cam.background        = color(0,0,0);
@@ -259,7 +259,7 @@ void cornell_box() {
     camera cam;
 
     cam.aspect_ratio      = 1.0;
-    cam.image_width       = 600;
+    cam.image_w       = 600;
     cam.samples_per_pixel = 200;
     cam.max_depth         = 50;
     cam.background        = color(0,0,0);
@@ -304,7 +304,7 @@ void cornell_smoke() {
     camera cam;
 
     cam.aspect_ratio      = 1.0;
-    cam.image_width       = 600;
+    cam.image_w       = 600;
     cam.samples_per_pixel = 200;
     cam.max_depth         = 50;
     cam.background        = color(0,0,0);
@@ -384,7 +384,7 @@ void final_scene(int image_width, int samples_per_pixel, int max_depth) {
     camera cam;
 
     cam.aspect_ratio      = 1.0;
-    cam.image_width       = image_width;
+    cam.image_w       = image_width;
     cam.samples_per_pixel = samples_per_pixel;
     cam.max_depth         = max_depth;
     cam.background        = color(0,0,0);
