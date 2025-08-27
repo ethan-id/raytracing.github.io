@@ -48,11 +48,11 @@ class vec3 {
         }
 
         static vec3 random() {
-            return vec3(random_double(), random_double(), random_double());
+            return vec3(randomDouble(), randomDouble(), randomDouble());
         }
 
         static vec3 random(double min, double max) {
-            return vec3(random_double(min,max), random_double(min,max), random_double(min,max));
+            return vec3(randomDouble(min,max), randomDouble(min,max), randomDouble(min,max));
         }
 };
 
@@ -102,11 +102,11 @@ inline vec3 cross(const vec3& u, const vec3& v) {
                 u.e[0] * v.e[1] - u.e[1] * v.e[0]);
 }
 
-inline vec3 unit_vector(const vec3& v) {
+inline vec3 convertToUnitVector(const vec3& v) {
     return v / v.length();
 }
 
-inline vec3 random_unit_vector() {
+inline vec3 getRandomUnitVector() {
     while (true) {
         auto p = vec3::random(-1, 1);
         auto lensq = p.length_squared();
@@ -115,8 +115,8 @@ inline vec3 random_unit_vector() {
     }
 }
 
-inline vec3 random_on_hemisphere(const vec3& normal) {
-    vec3 on_unit_sphere = random_unit_vector();
+inline vec3 getRandomVectorOnHemisphere(const vec3& normal) {
+    vec3 on_unit_sphere = getRandomUnitVector();
     if (dot(on_unit_sphere, normal) > 0.0) // In same hemisphere as the normal
         return on_unit_sphere;
     else

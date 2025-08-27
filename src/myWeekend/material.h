@@ -15,7 +15,7 @@ class lambertian : public material {
         lambertian(const color& albedo) : albedo(albedo) {}
 
         bool scatter(const ray& ray_in, const hit_record& rec, color& attenuation, ray& scattered) const override {
-            auto scatter_dir = rec.normal + random_unit_vector();
+            auto scatter_dir = rec.normal + getRandomUnitVector();
 
             if (scatter_dir.near_zero())
                 scatter_dir = rec.normal;
@@ -34,7 +34,7 @@ class metal : public material {
 
         bool scatter(const ray& r_in, const hit_record& rec, color& attenuation, ray& scattered) const override {
             vec3 reflected = reflect(r_in.direction(), rec.normal);
-            reflected = unit_vector(reflected) + (fuzz * random_unit_vector());
+            reflected = convertToUnitVector(reflected) + (fuzz * getRandomUnitVector());
             scattered = ray(rec.p, reflected);
             attenuation = albedo;
             return (dot(scattered.direction(), rec.normal) > 0);

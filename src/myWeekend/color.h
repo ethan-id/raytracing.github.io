@@ -5,21 +5,21 @@
 
 using color = vec3;
 
-inline double linear_to_gamma(double linear_component) {
+inline double convertLinearToGamma(double linear_component) {
     if (linear_component > 0)
         return std::sqrt(linear_component);
     return 0;
 }
 
-void write_color(std::ostream& out, const color& pxl_color) {
+void writeColor(std::ostream& out, const color& pxl_color) {
     auto r = pxl_color.x();
     auto g = pxl_color.y();
     auto b = pxl_color.z();
 
     // Apply a linear to gamma transform for gamma 2
-    r = linear_to_gamma(r);
-    g = linear_to_gamma(g);
-    b = linear_to_gamma(b);
+    r = convertLinearToGamma(r);
+    g = convertLinearToGamma(g);
+    b = convertLinearToGamma(b);
 
     // Translate the [0,1] component vals to the byte range [0,255]
     static const interval intensity(0.000, 0.999);

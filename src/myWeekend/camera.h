@@ -21,10 +21,10 @@ class camera {
                 for (int i = 0; i < image_w; i++) {
                     color pixel_color(0,0,0);
                     for (int sample = 0; sample < samples_per_pixel; sample++) {
-                        ray r = get_ray(i, j);
-                        pixel_color += ray_color(r, max_depth, world);
+                        ray r = getRay(i, j);
+                        pixel_color += getRaysColor(r, max_depth, world);
                     }
-                    write_color(std::cout, pixel_samples_scale * pixel_color);
+                    writeColor(std::cout, pixel_samples_scale * pixel_color);
                 }
             }
 
@@ -34,7 +34,7 @@ class camera {
     private:
         int    image_h;             // Rendered image height
         double pixel_samples_scale; // Color scale factor for a sum of pixel samples
-        point3 center;              // Camere center
+        point3 center;              // Camera center
         point3 pixel00_loc;         // Location of pixel at 0,0
         vec3   pixel_delta_u;       // Offset to pixel to the right
         vec3   pixel_delta_v;       // Offset to pixel below
@@ -66,24 +66,24 @@ class camera {
         }
 
         // Construct a ray originating from the origin and directed at a randomly sampled point around the pixel at i, j
-        ray get_ray(int i, int j) const {
-            auto offset = sample_square();
-            auto pixel_sample = pixel00_loc
+        ray getRay(int i, int j) const {
+            auto offset = getSampleSquare();
+            auto pixel_sample_vec = pixel00_loc
                             + ((i + offset.x()) * pixel_delta_u)
                             + ((j + offset.y()) * pixel_delta_v);
 
-            auto ray_origin = center;
-            auto ray_dir = pixel_sample - ray_origin;
+            auto ray_origin_point = center;
+            auto ray_dir = pixel_sample_vec - ray_origin_point;
 
-            return ray(ray_origin, ray_dir);
+            return ray(ray_origin_point, ray_dir);
         }
 
         // Returns the vector to a random point in the [-0.5,-0.5] - [+0.5, +0.5] unit square
-        vec3 sample_square() const {
-            return vec3(random_double() - 0.5, random_double() - 0.5, 0);
+        vec3 getSampleSquare() const {
+            return vec3(randomDouble() - 0.5, randomDouble() - 0.5, 0);
         }
 
-        color ray_color(const ray& r, int depth, const hittable& world) const {
+        color getRaysColor(const ray& r, int depth, const hittable& world) const {
             // if past depth, no more light, return black
             if (depth <= 0)
                 return color(0,0,0);
@@ -94,11 +94,11 @@ class camera {
                 ray scattered;
                 color attenuation;
                 if (rec.mat->scatter(r, rec, attenuation, scattered))
-                    return attenuation * ray_color(scattered, depth-1, world);
+                    return attenuation * getRaysColor(scattered, depth-1, world);
                 return color(0,0,0);
             }
 
-            vec3 unit_dir = unit_vector(r.direction());
+            vec3 unit_dir = convertToUnitVector(r.direction());
             auto a = 0.5*(unit_dir.y() + 1.0);
             return (1.0-a)*color(1.0, 1.0, 1.0) + a*color(0.5, 0.7, 1.0);
         }
