@@ -1,6 +1,7 @@
 #ifndef MATERIAL_H
 #define MATERIAL_H
 
+#include <cmath>
 class material {
     public:
         virtual ~material() = default;
@@ -54,9 +55,18 @@ class dielectric : public material {
             double ri = rec.front_face ? (1.0/refraction_index) : refraction_index;
 
             vec3 unit_dir = convertToUnitVector(r_in.direction());
-            vec3 refracted = refract(unit_dir, rec.normal, ri);
+            double cos_theta = std::fmin(dot(-unit_dir, rec.normal), 1.0);
+            double sin_theta = std::sqrt(1.0 - cos_theta*cos_theta);
 
-            scattered = ray(rec.p, refracted);
+            bool cannot_refract = ri * sin_theta > 1.0;
+            vec3 direction;
+
+            if (cannot_refract)
+                direction = reflect(unit_dir, rec.normal);
+            else
+                direction = refract(unit_dir, rec.normal, ri);
+
+            scattered = ray(rec.p, direction);
             return true;
         }
 
