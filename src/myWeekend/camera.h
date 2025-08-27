@@ -1,6 +1,7 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
+#include "TheNextWeek/vec3.h"
 #include "hittable.h"
 
 class camera {
@@ -46,7 +47,7 @@ class camera {
             center = point3(0, 0, 0);
 
             // Determine viewport dimensions.
-            auto focal_length = 1.0;
+            auto focal_length = 0.7;
             auto viewport_height = 2.0;
             auto viewport_width = viewport_height * (double(image_w)/image_h);
 
@@ -85,7 +86,8 @@ class camera {
             hit_record rec;
 
             if (world.hit(r, interval(0, infinity), rec)) {
-                return 0.5 * (rec.normal + color(1,1,1));
+                vec3 dir = random_on_hemisphere(rec.normal);
+                return 0.5 * ray_color(ray(rec.p, dir), world);
             }
 
             vec3 unit_dir = unit_vector(r.direction());
