@@ -61,7 +61,7 @@ class dielectric : public material {
             bool cannot_refract = ri * sin_theta > 1.0;
             vec3 direction;
 
-            if (cannot_refract)
+            if (cannot_refract || reflectance(cos_theta, ri) > randomDouble())
                 direction = reflect(unit_dir, rec.normal);
             else
                 direction = refract(unit_dir, rec.normal, ri);
@@ -72,6 +72,12 @@ class dielectric : public material {
 
     private:
         double refraction_index;
+
+        static double reflectance(double cosine, double refractionIndex) {
+            auto r0 = (1 - refractionIndex) / (1 + refractionIndex);
+            r0 = r0*r0;
+            return r0 + (1-r0)*std::pow((1-cosine), 5);
+        }
 };
 
 #endif
