@@ -6,6 +6,7 @@ class material {
     public:
         virtual ~material() = default;
 
+        // Return a boolena if the incoming ray will scatter or not
         virtual bool scatter(const ray& ray_in, const hit_record& rec, color& attenuation, ray& scattered) const {
             return false;
         }

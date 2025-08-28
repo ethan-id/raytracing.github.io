@@ -13,13 +13,12 @@ class hit_record {
 
         void setFaceNormal(const ray& r, const vec3& outward_normal) {
             // Sets the hit record normal vector. Assuming that outward_normal has unit length
-
             front_face = dot(r.direction(), outward_normal) < 0;
             normal = front_face ? outward_normal : -outward_normal;
         }
 };
 
-class hittable{
+class hittable {
     public:
         virtual ~hittable() = default;
 

@@ -5,6 +5,7 @@
 
 #include <vector>
 
+// This class is used as the "world" or "scene" of the render
 class hittable_list : public hittable {
     public:
         std::vector<shared_ptr<hittable>> objects;
@@ -18,6 +19,8 @@ class hittable_list : public hittable {
             objects.push_back(object);
         }
 
+        // This method gets called by the camera with every outgoing ray to see if it 
+        // collides with an object.
         bool hit(const ray& r, interval ray_t, hit_record& rec) const override {
             hit_record temp_rec;
             bool hit_anything = false;

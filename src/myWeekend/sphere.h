@@ -16,7 +16,9 @@ class sphere : public hittable {
             auto c = oc.length_squared() - radius*radius;
 
             auto discriminant = h*h - a*c;
-            if (discriminant < 0)
+            // if the discriminant in the quadratic is negative it has no solutions, aka the ray
+            // "r", does not intersect this sphere at any point
+            if (discriminant < 0) 
                 return false;
 
             auto sqrtd = std::sqrt(discriminant);

@@ -40,15 +40,15 @@ class camera {
                 for (int i = 0; i < image_w; ++i) {
                     color pixel_color(0,0,0);
                     for (int s = 0; s < samples_per_pixel; ++s) {
-                        ray r = getRay(i, j);          // use thread_local RNG inside
+                        ray r = getRay(i, j);
                         pixel_color += getRaysColor(r, max_depth, world);
                     }
                     framebuffer[idx(i,j)] = pixel_samples_scale * pixel_color;
                 }
+
                 int d = ++done_rows;
-                if ((d & 15) == 0) {
+                if ((d & 15) == 0)
                     std::clog << "\rScanlines remaining: " << (image_h - d) << ' ' << std::flush;
-                }
             }
 
             std::ofstream out("image.ppm", std::ios::binary);
@@ -56,6 +56,7 @@ class camera {
             for (int j = 0; j < image_h; ++j)
                 for (int i = 0; i < image_w; ++i)
                     writeColor(out, framebuffer[idx(i,j)]);
+
             std::clog << "\rDone.                 \n";
         }
 
@@ -129,18 +130,25 @@ class camera {
             return center + (p[0] * defocus_disk_u) + (p[1] * defocus_disk_v);
         }
 
+        // Send a ray off into the world, let it bounce around and eventually return its color
         color getRaysColor(const ray& r, int depth, const hittable& world) const {
-            // if past depth, no more light, return black
+            // if past `depth`, no more light, return black
             if (depth <= 0)
                 return color(0,0,0);
 
+            // Stores hit information
             hit_record rec;
 
             if (world.hit(r, interval(0.001, infinity), rec)) {
                 ray scattered;
                 color attenuation;
+
+                // Check if ray will scatter based on material
                 if (rec.mat->scatter(r, rec, attenuation, scattered))
                     return attenuation * getRaysColor(scattered, depth-1, world);
+
+                // If ray doesn't scatter but we have hit a world object, return black.
+                // Effectively simulating the material/object absorbing this ray of light
                 return color(0,0,0);
             }
 
