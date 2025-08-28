@@ -1,6 +1,12 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
+#include <vector>      // std::vector
+#include <fstream>     // std::ofstream
+#include <atomic>      // std::atomic
+#include <iostream>    // std::cout, std::clog, std::flush
+#include <algorithm>   // std::min
+                       //
 #include "hittable.h"
 #include "material.h"
 #include "myWeekend/rtweekend.h"
@@ -24,20 +30,32 @@ class camera {
         void render(const hittable& world) {
             initialize();
 
-            std::cout << "P3\n" << image_w << ' ' << image_h << "\n255\n";
+            std::vector<color> framebuffer(image_w * image_h);
+            std::atomic<int> done_rows{0};
 
-            for (int j = 0; j < image_h; j++) {
-                std::clog << "\rScanlines remaining: " << (image_h - j) << ' ' << std::flush;
-                for (int i = 0; i < image_w; i++) {
+            auto idx = [&](int i, int j){ return j*image_w + i; };
+
+            #pragma omp parallel for schedule(dynamic,1)
+            for (int j = 0; j < image_h; ++j) {
+                for (int i = 0; i < image_w; ++i) {
                     color pixel_color(0,0,0);
-                    for (int sample = 0; sample < samples_per_pixel; sample++) {
-                        ray r = getRay(i, j);
+                    for (int s = 0; s < samples_per_pixel; ++s) {
+                        ray r = getRay(i, j);          // use thread_local RNG inside
                         pixel_color += getRaysColor(r, max_depth, world);
                     }
-                    writeColor(std::cout, pixel_samples_scale * pixel_color);
+                    framebuffer[idx(i,j)] = pixel_samples_scale * pixel_color;
+                }
+                int d = ++done_rows;
+                if ((d & 15) == 0) {
+                    std::clog << "\rScanlines remaining: " << (image_h - d) << ' ' << std::flush;
                 }
             }
 
+            std::ofstream out("image.ppm", std::ios::binary);
+            out << "P3\n" << image_w << ' ' << image_h << "\n255\n";
+            for (int j = 0; j < image_h; ++j)
+                for (int i = 0; i < image_w; ++i)
+                    writeColor(out, framebuffer[idx(i,j)]);
             std::clog << "\rDone.                 \n";
         }
 
