@@ -24,6 +24,7 @@ set ( SOURCE_MY_WEEKEND
   src/myWeekend/vec3.h
   src/myWeekend/aabb.h
   src/myWeekend/bvh.h
+  src/myWeekend/texture.h
 )
 
 include_directories(src)
