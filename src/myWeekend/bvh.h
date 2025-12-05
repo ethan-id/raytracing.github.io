@@ -13,8 +13,12 @@ class bvh_node : public hittable {
         }
 
         bvh_node(std::vector<shared_ptr<hittable>>& objs, size_t start, size_t end) {
+            bbox = aabb::empty;
+            for (size_t objInd=start; objInd < end; objInd++) {
+                bbox = aabb(bbox, objs[objInd]->boundingBox());
+            }
+            int axis = bbox.longestAxis();
             size_t objSpan = end - start;
-            int axis = randomInt(0,2);
             auto sortFunc = (axis == 0) ? boxCompareX
                           : (axis == 1) ? boxCompareY
                                         : boxCompareZ;
@@ -29,9 +33,8 @@ class bvh_node : public hittable {
                 auto mid = start + objSpan/2;
                 left = make_shared<bvh_node>(objs, start, mid);
                 right = make_shared<bvh_node>(objs, mid, end);
+            }
         }
-
-        bbox = aabb(left->boundingBox(), right->boundingBox());        }
 
         bool hit(const ray& r, interval ray_t, hit_record& rec) const override {
             if (!bbox.hit(r, ray_t))
