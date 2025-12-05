@@ -9,7 +9,7 @@
 [ ] The ability to load textures (file format(s) of your choice; may use third-party libraries)
 [ ] Textured spheres and triangles
 [ ] The ability to load and render triangle meshes (file format(s) of your choice; may use third-party libraries for loading)
-[ ] A spatial subdivision acceleration structure of your choice
+[x] A spatial subdivision acceleration structure of your choice
 [x] Specular, diffuse, and dielectric materials (per first volume of Ray Tracing in One Weekend series)
 [ ] Emissive materials (lights)
 [ ] Quads: 10 
