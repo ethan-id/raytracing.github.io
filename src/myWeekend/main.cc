@@ -8,7 +8,7 @@
 #include "material.h"
 #include "texture.h"
 
-int main() {
+void bouncingSpheres() {
     hittable_list world;
 
     auto checkerPattern = make_shared<checkerTexture>(0.32, color(.2, .3, .1), color(.9, .9, .9));
@@ -70,4 +70,9 @@ int main() {
     cam.focus_dist    = 10.0;
 
     cam.render(world);
+
+}
+
+int main() {
+    bouncingSpheres();
 }
