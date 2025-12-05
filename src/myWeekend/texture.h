@@ -22,4 +22,18 @@ class solidColor : public texture {
         color albedo;
 };
 
+class checkerTexture : public texture {
+    public:
+        checkerTexture(double scale, shared_ptr<texture> even, shared_ptr<texture> odd)
+            : invScale(1.0 / scale), even(even), odd(odd) {}
+
+        checkerTexture(double scale, const color& c1, const color& c2)
+            : checkerTexture(scale, make_shared<solidColor>(c1), make_shared<solidColor>(c2)) {}
+
+    private:
+        double invScale;
+        shared_ptr<texture> even;
+        shared_ptr<texture> odd;
+};
+
 #endif
