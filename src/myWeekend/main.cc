@@ -6,12 +6,13 @@
 #include "hittable_list.h"
 #include "sphere.h"
 #include "material.h"
+#include "texture.h"
 
 int main() {
     hittable_list world;
 
-    auto ground_material = make_shared<lambertian>(color(0.5, 0.5, 0.5));
-    world.add(make_shared<sphere>(point3(0,-1000,0), 1000, ground_material));
+    auto checkerPattern = make_shared<checkerTexture>(0.32, color(.2, .3, .1), color(.9, .9, .9));
+    world.add(make_shared<sphere>(point3(0, -1000, 0), 1000, make_shared<lambertian>(checkerPattern)));
 
     for (int a = -11; a < 11; a++) {
         for (int b = -11; b < 11; b++) {

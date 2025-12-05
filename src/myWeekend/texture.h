@@ -30,6 +30,15 @@ class checkerTexture : public texture {
         checkerTexture(double scale, const color& c1, const color& c2)
             : checkerTexture(scale, make_shared<solidColor>(c1), make_shared<solidColor>(c2)) {}
 
+        color value(double u, double v, const point3& p) const override {
+            auto xInt = int(std::floor(invScale * p.x()));
+            auto yInt = int(std::floor(invScale * p.y()));
+            auto zInt = int(std::floor(invScale * p.z()));
+
+            bool isEven = (xInt + yInt + zInt) % 2 == 0;
+            return isEven ? even->value(u, v, p) : odd->value(u, v, p);
+        }
+
     private:
         double invScale;
         shared_ptr<texture> even;
