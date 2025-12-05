@@ -1,6 +1,8 @@
 #ifndef TEXTURE_H
 #define TEXTURE_H
 
+#include "rtw_stb_image.h"
+
 class texture {
     public:
         virtual ~texture() = default;
@@ -43,6 +45,28 @@ class checkerTexture : public texture {
         double invScale;
         shared_ptr<texture> even;
         shared_ptr<texture> odd;
+};
+
+class imageTexture : public texture {
+    public:
+        imageTexture(const char* fileName) : img(fileName) {}
+
+        color value(double u, double v, const point3& p) const override {
+            // If no texture data, return cyan to notice easier while debugging
+            if (img.height() <= 0) return color(0, 1, 1); 
+
+            u = interval(0, 1).clamp(u);
+            v = 1.0 - interval(0, 1).clamp(v);
+
+            auto i = int(u * img.width());
+            auto j = int(v * img.height());
+            auto pixel = img.pixel_data(i, j);
+            auto colorScale = 1.0 / 255.0;
+            return color(colorScale * pixel[0], colorScale * pixel[1], colorScale * pixel[2]);
+        }
+
+    private:
+        rtw_image img;
 };
 
 #endif
