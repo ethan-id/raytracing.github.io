@@ -1,6 +1,7 @@
 #ifndef HITTABLE_LIST_H
 #define HITTABLE_LIST_H
 
+#include "aabb.h"
 #include "hittable.h"
 
 #include <vector>
@@ -17,6 +18,7 @@ class hittable_list : public hittable {
 
         void add(shared_ptr<hittable> object) {
             objects.push_back(object);
+            bbox = aabb(bbox, object->boundingBox());
         }
 
         // This method gets called by the camera with every outgoing ray to see if it 
@@ -36,6 +38,11 @@ class hittable_list : public hittable {
 
             return hit_anything;
         }
+
+        aabb boundingBox() const override { return bbox; }
+
+    private:
+        aabb bbox;
 };
 
 #endif

@@ -6,7 +6,7 @@
 #include <atomic>      // std::atomic
 #include <iostream>    // std::cout, std::clog, std::flush
 #include <algorithm>   // std::min
-                       //
+ 
 #include "hittable.h"
 #include "material.h"
 #include "myWeekend/rtweekend.h"
