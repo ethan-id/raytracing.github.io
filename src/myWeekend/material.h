@@ -1,7 +1,11 @@
 #ifndef MATERIAL_H
 #define MATERIAL_H
 
+#include "hittable.h"
+#include "texture.h"
+
 #include <cmath>
+
 class material {
     public:
         virtual ~material() = default;
@@ -14,7 +18,8 @@ class material {
 
 class lambertian : public material {
     public:
-        lambertian(const color& albedo) : albedo(albedo) {}
+        lambertian(const color& albedo) : tex(make_shared<solidColor>(albedo)) {}
+        lambertian(shared_ptr<texture> tex) : tex(tex) {}
 
         bool scatter(const ray& ray_in, const hit_record& rec, color& attenuation, ray& scattered) const override {
             auto scatter_dir = rec.normal + getRandomUnitVector();
@@ -22,12 +27,12 @@ class lambertian : public material {
             if (scatter_dir.near_zero())
                 scatter_dir = rec.normal;
             scattered = ray(rec.p, scatter_dir, ray_in.time());
-            attenuation = albedo;
+            attenuation = tex->value(rec.u, rec.v, rec.p);
             return true;
         }
 
     private:
-        color albedo;
+        shared_ptr<texture> tex;
 };
 
 class metal : public material {
