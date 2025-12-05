@@ -16,8 +16,8 @@ class bvh_node : public hittable {
             size_t objSpan = end - start;
             int axis = randomInt(0,2);
             auto sortFunc = (axis == 0) ? boxCompareX
-                            : (axis == 1) ? boxCompareY
-                                          : boxCompareZ;
+                          : (axis == 1) ? boxCompareY
+                                        : boxCompareZ;
 
             if (objSpan == 1) {
                 left = right = objs[start];
