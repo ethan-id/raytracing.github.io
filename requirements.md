@@ -6,8 +6,8 @@
 [x] Anti-aliasing
 [x] Ray/sphere intersections
 [x] Ray/triangle intersections
-[ ] The ability to load textures (file format(s) of your choice; may use third-party libraries)
-[ ] Textured spheres and triangles
+[x] The ability to load textures (file format(s) of your choice; may use third-party libraries)
+[x] Textured spheres and triangles
 [ ] The ability to load and render triangle meshes (file format(s) of your choice; may use third-party libraries for loading)
 [x] A spatial subdivision acceleration structure of your choice
 [x] Specular, diffuse, and dielectric materials (per first volume of Ray Tracing in One Weekend series)
