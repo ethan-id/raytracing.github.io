@@ -9,6 +9,39 @@
 #include "texture.h"
 #include "quad.h"
 
+void cornellBox() {
+    hittable_list world;
+
+    auto red   = make_shared<lambertian>(color(.65, .05, .05));
+    auto white = make_shared<lambertian>(color(.73, .73, .73));
+    auto green = make_shared<lambertian>(color(.12, .45, .15));
+    auto light = make_shared<diffuseLight>(color(15, 15, 15));
+
+    world.add(make_shared<quad>(point3(555,0,0), vec3(0,555,0), vec3(0,0,555), green));
+    world.add(make_shared<quad>(point3(0,0,0), vec3(0,555,0), vec3(0,0,555), red));
+    world.add(make_shared<quad>(point3(343, 554, 332), vec3(-130,0,0), vec3(0,0,-105), light));
+    world.add(make_shared<quad>(point3(0,0,0), vec3(555,0,0), vec3(0,0,555), white));
+    world.add(make_shared<quad>(point3(555,555,555), vec3(-555,0,0), vec3(0,0,-555), white));
+    world.add(make_shared<quad>(point3(0,0,555), vec3(555,0,0), vec3(0,555,0), white));
+
+    camera cam;
+
+    cam.aspect_ratio      = 1.0;
+    cam.image_w           = 600;
+    cam.samples_per_pixel = 200;
+    cam.max_depth         = 50;
+    cam.bg        = color(0,0,0);
+
+    cam.vfov     = 40;
+    cam.lookfrom = point3(278, 278, -800);
+    cam.lookat   = point3(278, 278, 0);
+    cam.vup      = vec3(0,1,0);
+
+    cam.defocus_angle = 0;
+
+    cam.render(world);
+}
+
 void simpleLight() {
     hittable_list world;
 
@@ -17,6 +50,7 @@ void simpleLight() {
     world.add(make_shared<sphere>(point3(0,2,0), 2, make_shared<lambertian>(pertext)));
 
     auto difflight = make_shared<diffuseLight>(color(4,4,4));
+    world.add(make_shared<sphere>(point3(0,7,0), 2, difflight));
     world.add(make_shared<quad>(point3(3,1,-2), vec3(2,0,0), vec3(0,2,0), difflight));
 
     camera cam;
@@ -213,12 +247,13 @@ void earth() {
 }
 
 int main() {
-    switch (6) {
+    switch (7) {
         case 1: bouncingSpheres();  break;
         case 2: checkeredSpheres(); break;
         case 3: earth();            break;
         case 4: perlinSpheres();    break;
         case 5: quads();            break;
         case 6: simpleLight();      break;
+        case 7: cornellBox();       break;
     }
 }
