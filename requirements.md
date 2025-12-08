@@ -11,8 +11,8 @@
 [ ] The ability to load and render triangle meshes (file format(s) of your choice; may use third-party libraries for loading)
 [x] A spatial subdivision acceleration structure of your choice
 [x] Specular, diffuse, and dielectric materials (per first volume of Ray Tracing in One Weekend series)
-[ ] Emissive materials (lights)
-[ ] Quads: 10 
+[x] Emissive materials (lights)
+[x] Quads: 10 
 [ ] BRDF materials (Bi-directional reflectance distribution functions): 30
 [x] Motion blur: 10
 [x] Defocus blur/depth of field: 10
