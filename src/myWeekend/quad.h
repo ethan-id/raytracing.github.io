@@ -30,13 +30,33 @@ class quad : public hittable {
         if (std::fabs(denom) < 1e-8 || !ray_t.contains(t))
             return false;
 
+        // Does hit point lie within planar shape
         auto intersection = r.at(t);
+        vec3 planarHitVec = intersection - Q;
+        auto alpha = dot(w, cross(planarHitVec, v));
+        auto beta = dot(w, cross(u, planarHitVec));
 
+        if (!interior(alpha, beta, rec))
+            return false;
+
+        // Ray hits the 2D shape; set the rest of the hit record and return true.
         rec.t = t;
         rec.p = intersection;
         rec.mat = mat;
         rec.setFaceNormal(r, normal);
+        return true;
+    }
 
+    virtual bool interior(double a, double b, hit_record& rec) const {
+        interval unit_interval = interval(0, 1);
+        // Given the hit point in plane coordinates, return false if it is outside the
+        // primitive, otherwise set the hit record UV coordinates and return true.
+
+        if (!unit_interval.contains(a) || !unit_interval.contains(b))
+            return false;
+
+        rec.u = a;
+        rec.v = b;
         return true;
     }
 
