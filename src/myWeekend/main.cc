@@ -246,8 +246,71 @@ void earth() {
     cam.render(hittable_list(globe));
 }
 
+void final_scene() {
+    hittable_list world;
+
+    // 1. Floor: Checkerboard texture (Quads)
+    auto checker = make_shared<checkerTexture>(0.32, color(.2, .3, .1), color(.9, .9, .9));
+    world.add(make_shared<quad>(point3(-50, 0, -50), vec3(100, 0, 0), vec3(0, 0, 100), make_shared<lambertian>(checker)));
+
+    // 2. Light: Overhead Quad (Diffuse Light)
+    auto light = make_shared<diffuseLight>(color(7, 7, 7));
+    world.add(make_shared<quad>(point3(-10, 15, -10), vec3(20, 0, 0), vec3(0, 0, 20), light));
+
+    // 3. Moving Sphere (Motion Blur)
+    auto center1 = point3(-4, 2, 0);
+    auto center2 = point3(-4, 2, 0) + vec3(0, 0.5, 0);
+    auto moving_mat = make_shared<lambertian>(color(0.7, 0.3, 0.1));
+    world.add(make_shared<sphere>(center1, center2, 1.0, moving_mat));
+
+    // 4. Glass Sphere (Dielectric)
+    auto glass = make_shared<dielectric>(1.5);
+    world.add(make_shared<sphere>(point3(0, 2, 0), 1.5, glass));
+    // Bubble inside glass
+    world.add(make_shared<sphere>(point3(0, 2, 0), 1.0, make_shared<dielectric>(1.0 / 1.5)));
+
+    // 5. Metal Sphere (Metal)
+    auto metal_mat = make_shared<metal>(color(0.8, 0.8, 0.9), 0.1); 
+    world.add(make_shared<sphere>(point3(4, 2, 0), 1.5, metal_mat));
+
+    // 6. Earth Sphere (Image Texture) - Background
+    auto earth_texture = make_shared<imageTexture>("earthmap.jpg");
+    auto earth_surface = make_shared<lambertian>(earth_texture);
+    world.add(make_shared<sphere>(point3(0, 8, -5), 2.0, earth_surface));
+
+    // 7. Perlin Noise Sphere (Noise Texture)
+    auto perlin_tex = make_shared<noiseTexture>();
+    world.add(make_shared<sphere>(point3(-8, 3, -5), 2.0, make_shared<lambertian>(perlin_tex)));
+
+    // 8. Mirror Quad (Background Metal)
+    auto mirror = make_shared<metal>(color(0.9, 0.9, 0.9), 0.0);
+    world.add(make_shared<quad>(point3(-15, 0, -15), vec3(30, 0, 0), vec3(0, 10, 0), mirror));
+
+    // Acceleration Structure
+    world = hittable_list(make_shared<bvh_node>(world));
+
+    camera cam;
+
+    cam.aspect_ratio      = 16.0 / 9.0;
+    cam.image_w           = 800;
+    cam.samples_per_pixel = 100; 
+    cam.max_depth         = 50;
+    cam.bg                = color(0,0,0);
+
+    cam.vfov     = 40;
+    cam.lookfrom = point3(0, 6, 18);
+    cam.lookat   = point3(0, 2, 0);
+    cam.vup      = vec3(0,1,0);
+
+    // Defocus Blur
+    cam.defocus_angle = 0.5;
+    cam.focus_dist    = (point3(0, 2, 0) - cam.lookfrom).length();
+
+    cam.render(world);
+}
+
 int main() {
-    switch (7) {
+    switch (8) {
         case 1: bouncingSpheres();  break;
         case 2: checkeredSpheres(); break;
         case 3: earth();            break;
@@ -255,5 +318,6 @@ int main() {
         case 5: quads();            break;
         case 6: simpleLight();      break;
         case 7: cornellBox();       break;
+        case 8: final_scene();      break;
     }
 }
