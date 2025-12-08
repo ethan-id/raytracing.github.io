@@ -15,10 +15,28 @@ class perlin {
         }
 
         double noise(const point3& p) const {
-            auto i = int(p.x() * 4) & 255;
-            auto j = int(p.y() * 4) & 255;
-            auto k = int(p.z() * 4) & 255;
-            return doubles[permX[i]^permY[j]^permZ[k]];
+            auto u = p.x() - std::floor(p.x());
+            auto v = p.y() - std::floor(p.y());
+            auto w = p.z() - std::floor(p.z());
+
+            auto i = int(std::floor(p.x()));
+            auto j = int(std::floor(p.y()));
+            auto k = int(std::floor(p.z()));
+            double c[2][2][2];
+
+            for (int di=0; di < 2; di++) {
+                for (int dj=0; dj < 2; dj++) {
+                    for (int dk=0; dk < 2; dk++) {
+                        c[di][dj][dk] = doubles[
+                            permX[(i+di) & 255] ^
+                            permY[(j+dj) & 255] ^
+                            permZ[(k+dk) & 255]
+                        ];
+                    }
+                }
+            }
+
+            return triInterp(c, u, v, w);        
         }
 
     private:
@@ -45,6 +63,21 @@ class perlin {
             }
         }
 
+        static double triInterp(double c[2][2][2], double u, double v, double w) {
+            auto accum = 0.0;
+            for (int i=0; i < 2; i++) {
+                for (int j=0; j < 2; j++) {
+                    for (int k=0; k < 2; k++) {
+                        accum += (i*u + (1-i)*(1-u))
+                               * (j*v + (1-j)*(1-v))
+                               * (k*w + (1-k)*(1-w))
+                               * c[i][j][k];
+                    }
+                }
+            }
+
+            return accum;
+        }
 };
 
 #endif

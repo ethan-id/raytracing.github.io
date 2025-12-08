@@ -16,7 +16,7 @@
 [ ] BRDF materials (Bi-directional reflectance distribution functions): 30
 [x] Motion blur: 10
 [x] Defocus blur/depth of field: 10
-[ ] Perlin noise: 10
+[x] Perlin noise: 10
 [ ] Importance sampling: 15
 [x] Parallelization: 10
 
