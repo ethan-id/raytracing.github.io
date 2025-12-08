@@ -18,7 +18,7 @@ class camera {
         int    image_w           = 100;  // Rendered image width in pixel count
         int    samples_per_pixel = 10;   // Count of random samples per pixel
         int    max_depth         = 10;   // Max num of ray bounces into scene
- 
+        color  bg; 
         double vfov     = 90;             // Vertical view angle (field of view)
         point3 lookfrom = point3(0,0,0);  // Point camera is looking from
         point3 lookat   = point3(0,0,-1); // Point camera is looking at 
@@ -140,22 +140,20 @@ class camera {
             // Stores hit information
             hit_record rec;
 
-            if (world.hit(r, interval(0.001, infinity), rec)) {
-                ray scattered;
-                color attenuation;
+            // If the ray hits nothing, return the background color.
+            if (!world.hit(r, interval(0.001, infinity), rec))
+                return bg;
 
-                // Check if ray will scatter based on material
-                if (rec.mat->scatter(r, rec, attenuation, scattered))
-                    return attenuation * getRaysColor(scattered, depth-1, world);
+            ray scattered;
+            color attenuation;
+            color emittedColor = rec.mat->getEmitted(rec.u, rec.v, rec.p);
 
-                // If ray doesn't scatter but we have hit a world object, return black.
-                // Effectively simulating the material/object absorbing this ray of light
-                return color(0,0,0);
-            }
+            if (!rec.mat->scatter(r, rec, attenuation, scattered))
+                return emittedColor;
 
-            vec3 unit_dir = convertToUnitVector(r.direction());
-            auto a = 0.5*(unit_dir.y() + 1.0);
-            return (1.0-a)*color(1.0, 1.0, 1.0) + a*color(0.5, 0.7, 1.0);
+            color scatterColor = attenuation * getRaysColor(scattered, depth-1, world);
+
+            return emittedColor + scatterColor;        
         }
 };
 
