@@ -10,7 +10,7 @@ class material {
     public:
         virtual ~material() = default;
 
-        color getEmitted(double u, double v, const point3& p) const {
+        virtual color getEmitted(double u, double v, const point3& p) const {
             return color(0,0,0);
         }
 
@@ -101,6 +101,6 @@ class diffuseLight : public material {
 
     private:
         shared_ptr<texture> tex;
-}
+};
 
 #endif
