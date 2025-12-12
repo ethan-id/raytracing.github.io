@@ -1,5 +1,5 @@
-# My weekend of ray tracing
+# My Semester of Ray Tracing
 
 Done!
 
-[Rendered Image](./rendered-image.ppm)
+[Rendered Image](./cornell.ppm)
