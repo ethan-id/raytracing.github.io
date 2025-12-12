@@ -12,6 +12,15 @@
 void cornellBox() {
     hittable_list world;
 
+    auto add_box = [&](point3 p, vec3 u, vec3 v, vec3 w, shared_ptr<material> mat) {
+        world.add(make_shared<quad>(p + w, u, v, mat));
+        world.add(make_shared<quad>(p, v, u, mat));
+        world.add(make_shared<quad>(p + u, v, w, mat));
+        world.add(make_shared<quad>(p, w, v, mat));
+        world.add(make_shared<quad>(p + v, w, u, mat));
+        world.add(make_shared<quad>(p, u, w, mat));
+    };
+
     auto red   = make_shared<lambertian>(color(.65, .05, .05));
     auto white = make_shared<lambertian>(color(.73, .73, .73));
     auto green = make_shared<lambertian>(color(.12, .45, .15));
@@ -24,12 +33,28 @@ void cornellBox() {
     world.add(make_shared<quad>(point3(555,555,555), vec3(-555,0,0), vec3(0,0,-555), white));
     world.add(make_shared<quad>(point3(0,0,555), vec3(555,0,0), vec3(0,555,0), white));
 
+    // Box 1
+    point3 center1 = point3(265 + 165/2.0, 165, 295 + 165/2.0);
+    vec3 u1 = vec3(cos(degreesToRadians(15))*165, 0, -sin(degreesToRadians(15))*165);
+    vec3 v1 = vec3(0, 330, 0);
+    vec3 w1 = vec3(sin(degreesToRadians(15))*165, 0, cos(degreesToRadians(15))*165);
+    point3 p1 = center1 - 0.5*u1 - 0.5*v1 - 0.5*w1;
+    add_box(p1, u1, v1, w1, white);
+
+    // Box 2
+    point3 center2 = point3(130 + 165/2.0, 82.5, 65 + 165/2.0);
+    vec3 u2 = vec3(cos(degreesToRadians(-18))*165, 0, -sin(degreesToRadians(-18))*165);
+    vec3 v2 = vec3(0, 165, 0);
+    vec3 w2 = vec3(sin(degreesToRadians(-18))*165, 0, cos(degreesToRadians(-18))*165);
+    point3 p2 = center2 - 0.5*u2 - 0.5*v2 - 0.5*w2;
+    add_box(p2, u2, v2, w2, white);
+
     camera cam;
 
     cam.aspect_ratio      = 1.0;
-    cam.image_w           = 600;
-    cam.samples_per_pixel = 200;
-    cam.max_depth         = 50;
+    cam.image_w           = 1920;
+    cam.samples_per_pixel = 20000;
+    cam.max_depth         = 100;
     cam.bg        = color(0,0,0);
 
     cam.vfov     = 40;
@@ -56,9 +81,9 @@ void simpleLight() {
     camera cam;
 
     cam.aspect_ratio      = 16.0 / 9.0;
-    cam.image_w           = 400;
-    cam.samples_per_pixel = 100;
-    cam.max_depth         = 50;
+    cam.image_w           = 3840;
+    cam.samples_per_pixel = 100000;
+    cam.max_depth         = 100;
     cam.bg        = color(0,0,0);
 
     cam.vfov     = 20;
@@ -292,7 +317,7 @@ void final_scene() {
     camera cam;
 
     cam.aspect_ratio      = 16.0 / 9.0;
-    cam.image_w           = 800;
+    cam.image_w           = 640;
     cam.samples_per_pixel = 100; 
     cam.max_depth         = 50;
     cam.bg                = color(0,0,0);
@@ -309,8 +334,79 @@ void final_scene() {
     cam.render(world);
 }
 
+void solar_system() {
+    hittable_list world;
+
+    // Sun (Emissive)
+    auto sun_mat = make_shared<diffuseLight>(color(10, 10, 10)); 
+    world.add(make_shared<sphere>(point3(0, 0, 0), 3.0, sun_mat));
+
+    // Planets
+    // Mercury (Grey/Brown)
+    auto mercury_mat = make_shared<lambertian>(color(0.5, 0.4, 0.3));
+    world.add(make_shared<sphere>(point3(4, 0, 1), 0.3, mercury_mat));
+
+    // Venus (Yellow/White)
+    auto venus_mat = make_shared<lambertian>(color(0.9, 0.9, 0.6));
+    world.add(make_shared<sphere>(point3(6, 0, -2), 0.5, venus_mat));
+
+    // Earth (Texture)
+    auto earth_texture = make_shared<imageTexture>("earthmap.jpg");
+    auto earth_mat = make_shared<lambertian>(earth_texture);
+    world.add(make_shared<sphere>(point3(9, 0, 0), 0.5, earth_mat));
+
+    // Mars (Red)
+    auto mars_mat = make_shared<lambertian>(color(0.8, 0.3, 0.1));
+    world.add(make_shared<sphere>(point3(12, 0, 3), 0.4, mars_mat));
+
+    // Jupiter (Orange/Striped)
+    auto jupiter_tex = make_shared<noiseTexture>();
+    auto jupiter_mat = make_shared<lambertian>(color(0.8, 0.6, 0.4)); // Base color
+    world.add(make_shared<sphere>(point3(18, 0, 0), 2.0, jupiter_mat));
+
+    // Saturn (Gold)
+    auto saturn_mat = make_shared<lambertian>(color(0.9, 0.8, 0.5));
+    world.add(make_shared<sphere>(point3(24, 0, -5), 1.7, saturn_mat));
+
+    // Uranus (Light Blue)
+    auto uranus_mat = make_shared<lambertian>(color(0.5, 0.8, 0.9));
+    world.add(make_shared<sphere>(point3(30, 0, 4), 1.2, uranus_mat));
+
+    // Neptune (Dark Blue)
+    auto neptune_mat = make_shared<lambertian>(color(0.2, 0.2, 0.7));
+    world.add(make_shared<sphere>(point3(35, 0, -2), 1.2, neptune_mat));
+
+
+    // Background stars (Random small diffuse lights far away)
+    for (int i = 0; i < 2000; i++) {
+        auto random_pos = point3::random(-200, 200);
+        if (random_pos.length() < 100) continue;
+        
+        auto star_color = color::random(0.5, 1.0);
+        world.add(make_shared<sphere>(random_pos, randomDouble(0.2, 0.5), make_shared<diffuseLight>(star_color * 5))); 
+    }
+
+    world = hittable_list(make_shared<bvh_node>(world));
+
+    camera cam;
+    cam.aspect_ratio      = 16.0 / 9.0;
+    cam.image_w           = 3840;
+    cam.samples_per_pixel = 100000;
+    cam.max_depth         = 100;
+    cam.bg                = color(0.0, 0.0, 0.0); // Pitch black background
+
+    cam.vfov     = 40;
+    cam.lookfrom = point3(0, 30, 40); // Top-down angled view
+    cam.lookat   = point3(15, 0, 0);  // Look at center of system (roughly)
+    cam.vup      = vec3(0,1,0);
+
+    cam.defocus_angle = 0;
+
+    cam.render(world);
+}
+
 int main() {
-    switch (8) {
+    switch (7) {
         case 1: bouncingSpheres();  break;
         case 2: checkeredSpheres(); break;
         case 3: earth();            break;
@@ -319,5 +415,6 @@ int main() {
         case 6: simpleLight();      break;
         case 7: cornellBox();       break;
         case 8: final_scene();      break;
+        case 9: solar_system();     break;
     }
 }
