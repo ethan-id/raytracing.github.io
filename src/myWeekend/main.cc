@@ -8,6 +8,7 @@
 #include "material.h"
 #include "texture.h"
 #include "quad.h"
+#include "triangle.h"
 
 void cornellBox() {
     hittable_list world;
@@ -405,8 +406,44 @@ void solar_system() {
     cam.render(world);
 }
 
+void texturedTriangle() {
+    hittable_list world;
+
+    // Use any image file available in the project root. This one already exists.
+    auto tex = make_shared<imageTexture>("earthmap.jpg");
+    auto tri_mat = make_shared<lambertian>(tex);
+
+    // A single triangle facing the camera, with explicit UVs.
+    // Geometry is in the Z = -1 plane; UVs map the image across the triangle.
+    point3 p0(-1.5, -1.0, -1.0);
+    point3 p1( 1.5, -1.0, -1.0);
+    point3 p2( 0.0,  1.5, -1.0);
+
+    vec3 uv0(0.0, 0.0, 0.0);
+    vec3 uv1(1.0, 0.0, 0.0);
+    vec3 uv2(0.5, 1.0, 0.0);
+
+    world.add(make_shared<triangle>(p0, p1, p2, uv0, uv1, uv2, tri_mat));
+
+    camera cam;
+    cam.aspect_ratio      = 16.0 / 9.0;
+    cam.image_w           = 640;
+    cam.samples_per_pixel = 50;
+    cam.max_depth         = 50;
+    cam.bg                = color(0.70, 0.80, 1.00);
+
+    cam.vfov     = 45;
+    cam.lookfrom = point3(0, 0, 2.5);
+    cam.lookat   = point3(0, 0, -1);
+    cam.vup      = vec3(0,1,0);
+
+    cam.defocus_angle = 0;
+
+    cam.render(world);
+}
+
 int main() {
-    switch (7) {
+    switch (10) {
         case 1: bouncingSpheres();  break;
         case 2: checkeredSpheres(); break;
         case 3: earth();            break;
@@ -416,5 +453,6 @@ int main() {
         case 7: cornellBox();       break;
         case 8: final_scene();      break;
         case 9: solar_system();     break;
+        case 10: texturedTriangle(); break;
     }
 }

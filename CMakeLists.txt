@@ -21,6 +21,7 @@ set ( SOURCE_MY_WEEKEND
   src/myWeekend/ray.h
   src/myWeekend/rtweekend.h
   src/myWeekend/sphere.h
+  src/myWeekend/triangle.h
   src/myWeekend/vec3.h
   src/myWeekend/aabb.h
   src/myWeekend/bvh.h
